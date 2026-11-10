@@ -27,3 +27,17 @@ def loans_by_branch(df: pd.DataFrame) -> pd.DataFrame:
         .sort_values(ascending=False)
         .reset_index(name="loans")
     )
+
+def loans_over_time(df: pd.DataFrame, freq: str="ME") -> pd.DataFrame:
+    """
+    När lånas det?
+    """
+    ts = (
+        df.set_index("checkout_date")
+        .sort_index()
+        .resample(freq)["loan_id"]
+        .nunique()
+        .rename("loans")
+        .reset_index()
+    )
+    return ts
